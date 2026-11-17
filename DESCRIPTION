@@ -1,15 +1,17 @@
 Package: finalproject
-Title: # todo
+Title: BST260 Final Project Data and Site
 Version: 0.0.3
 Authors@R:
     person(given = "Jialan",
            family = "Yang",
            role = c("aut", "cre"),
            email = "jialanyang@hsph.harvard.edu")
-Description: # todo
+Description: Provides public health datasets and project materials for
+    BST260 Introduction to Data Science. The package also supports a
+    Quarto-based project website built with pkgdown.
 Depends: R (>= 4.5.0)
-Suggests: knitr, testthat, rmarkdown, pkgdown
-License: Artistic-2.0
+Suggests: knitr, testthat, rmarkdown, pkgdown, quarto
+License: MIT + file LICENSE
 VignetteBuilder: quarto
 Encoding: UTF-8
 URL: https://github.com/waterrrrrrrr/finalproject, https://waterrrrrrrr.github.io/finalproject/

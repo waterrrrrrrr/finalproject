@@ -2,6 +2,10 @@
 title: "Instructions for BST260 projects, 2026"
 author: "Vincent Carey"
 date: 2026-11-09
+vignette: >
+  %\VignetteIndexEntry{Instructions for BST260 projects, 2026}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
 ---
 
 # Objectives
