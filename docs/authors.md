@@ -2,21 +2,20 @@
 
 ## Authors
 
-- **yourfirstname lastname**. Author, maintainer.
-  [](https://orcid.org/0000-0002-1825-0097)
+- **Jialan Yang**. Author, maintainer.
 
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/vjcitn/bst260project-template/NA/NA/NA/blob/HEAD/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/waterrrrrrrr/finalproject/blob/HEAD/DESCRIPTION)
 
-lastname y (2026). *bst260project: project code and narrative*. R
-package version 0.0.3, <https://github.com/youreponame>.
+Yang J (2026). *finalproject: \# todo*. R package version 0.0.3,
+<https://github.com/waterrrrrrrr/finalproject>.
 
     @Manual{,
-      title = {bst260project: project code and narrative},
-      author = {yourfirstname lastname},
+      title = {finalproject: # todo},
+      author = {Jialan Yang},
       year = {2026},
       note = {R package version 0.0.3},
-      url = {https://github.com/youreponame},
+      url = {https://github.com/waterrrrrrrr/finalproject},
     }
