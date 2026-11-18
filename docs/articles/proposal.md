@@ -1,0 +1,177 @@
+# Proposal: Physical Activity, Pulse Rate, and Seasonal Waterborne Outbreak Patterns
+
+Addressed to the **BST260 Teaching Team, Fall 2026**.
+
+## Project Overview
+
+This project will use two datasets already recommended in the BST260
+project materials. I will combine descriptive statistics, visualization,
+and introductory linear models to study two associations without
+interpreting either as causal. The first study will examine physical
+activity and measured pulse rate in young adults. The second will
+examine seasonal patterns across water-exposure types in reported
+waterborne outbreaks. Both studies will document data provenance,
+missingness, and limitations before any formal analysis is interpreted.
+
+## Study 1: Physical Activity and Measured Pulse Rate in Young Adults
+
+### Research Question and Motivation
+
+Among adults aged 19–40, how are participation in moderate or vigorous
+physical activity and weekly activity frequency associated with measured
+pulse rate? I expect participants who report physical activity to have
+lower average pulse rates than inactive participants, and I expect more
+activity days among active participants to be associated with lower
+pulse rates. These are prespecified hypotheses rather than preliminary
+findings. A systematic review of interventional studies found that
+exercise, particularly endurance training, can reduce resting heart
+rate, which provides a motivation for examining a related association in
+this educational dataset (Reimers, Knapp, & Reimers, 2018).
+
+### Data Source and Study Population
+
+I will use the educational `NHANES` data frame from the [`NHANES` R
+package](https://cran.r-project.org/web/packages/NHANES/refman/NHANES.html).
+It combines the 2009–2010 and 2011–2012 survey cycles and contains a
+resampled version of the original NHANES data. The package documentation
+states that the educational `NHANES` data contain 10,000 rows resampled
+from 20,293 rows of `NHANESraw` to reduce the effects of oversampling,
+and warns that the result is not a research database. The unit of
+analysis will be an individual record for a participant aged 19–40,
+inclusive. Because resampling can produce repeated participant IDs, I
+will report both the number of records and the number of unique IDs,
+inspect the multiplicities, and avoid arbitrary deduplication.
+Inferential results will therefore be presented as educational
+associations with appropriate caution.
+
+### Exposure, Outcome, and Covariates
+
+The primary binary exposure will be `PhysActive`, defined as whether the
+participant reports moderate- or vigorous-intensity sports, fitness, or
+recreational activity. Among participants with a valid active response,
+the secondary exposure will be `PhysActiveDays`, the reported number of
+activity days in a typical week. The outcome will be `Pulse`, documented
+by the package as a 60-second pulse rate. I will call this a measured
+pulse rate rather than assume that it is a strictly standardized resting
+heart rate.
+
+The primary adjustment set will be age, `Sex`, and `Race1`, selected
+from subject-matter reasoning before examining associations. I will
+consider `BMI` and `Smoke100` in sensitivity analyses. BMI may partly
+lie on a pathway between activity and pulse, so it will not be treated
+as an automatic primary confounder. `Smoke100` is only reported for
+participants aged 20 years or older, so any analysis using it will use
+an explicitly defined age-restricted sensitivity sample.
+
+### Missing Data and Planned Analysis
+
+I will describe sample size, mean, median, standard deviation, IQR, and
+missingness for every analysis variable. I will distinguish the
+structural non-applicability of `PhysActiveDays` for participants who do
+not report activity from a missing response among active participants; I
+will not recode all missing activity days to zero. The main frequency
+analysis will be restricted to active participants with valid frequency
+measurements. The primary analysis will use a documented complete-case
+rule and will discuss possible selection bias.
+
+Planned displays include boxplots of measured pulse rate by `PhysActive`
+and a plot of pulse rate against activity days. I will fit an unadjusted
+linear model and a multiple linear model adjusted for age, sex, and
+race, reporting estimated associations and confidence intervals. A
+physical-activity-by-sex interaction will be a secondary analysis rather
+than a data-driven subgroup search. BMI and smoking will be added only
+as sensitivity analyses, and I will check whether the available survey
+cycles support the same variable definitions before combining them.
+
+### Potential Limitations
+
+The data are cross-sectional, activity is self-reported, and the pulse
+measurement may not represent a laboratory-defined resting heart rate.
+Complete-case analysis may select a different population from the target
+age group. The educational resampling scheme and repeated IDs also limit
+ordinary survey inference. Results will be described as associations and
+will not be used to claim that exercise causes a lower pulse rate.
+
+## Study 2: Seasonal Patterns in Waterborne Illness Data
+
+### Research Question and Motivation
+
+Among reported waterborne outbreaks with a known water-exposure type,
+how do the four-season distributions differ between drinking-water and
+recreational-water outbreaks, and do these patterns vary across
+reporting decades? Comparing all four seasons preserves information that
+would be lost by reducing the outcome to summer versus non-summer. The
+season will be based on the recorded month: winter will include December
+through February, spring March through May, summer June through August,
+and autumn September through November.
+
+### Data Source, Unit, and Exposure
+
+I will use the `waterborne` object included in this package. It was
+retrieved from the CDC open-data endpoint described in the package
+documentation and demonstrated in the BST260 [CDC API
+lecture](https://vjcitn.github.io/2026vjc/slides/prob/20-sep23-cards-cdc.html).
+The original object is a nested list rather than a rectangular data
+frame. The unit of analysis will be one reported outbreak.
+
+The primary exposure will be a two-level variable created from the
+observed `water_exposure` labels: `Drinking water` versus
+`Recreational water`, with treated and untreated recreational-water
+labels combined. Records with mixed, undetermined, other/environmental,
+or missing exposure labels will not be silently assigned to either
+group. I will report how many records are excluded from the primary
+comparison and retain them in the data audit. A secondary analysis will
+keep treated and untreated recreational-water records separate if their
+sample sizes support a stable comparison. This definition keeps the main
+comparison interpretable while respecting the source data.
+
+### Outcome, Covariates, and Missing Data
+
+The primary outcome will be a four-level season variable derived from
+the recorded `month` field after validating its character-to-integer
+conversion. Calendar decade and geographic region are potential
+covariates because surveillance practices, reporting systems, and the
+distribution of water settings may change over time and across regions.
+I will derive a region from state when a standard state mapping is
+available and document how territories, multistate records, and
+unmatched locations are handled. The number of reported illnesses will
+be retained as a secondary descriptive measure rather than used to
+define the main outcome.
+
+### Planned Analysis and Limitations
+
+I will convert the nested list to a tidy data frame, create the
+four-season variable, and summarize seasonal counts and proportions by
+exposure group. Stacked bar charts and heatmaps will show the seasonal
+distribution, first overall and then by reporting decade. The primary
+comparison will retain all eligible outbreaks with valid month and
+exposure values. If the data support it, I will fit a simple model or
+estimate adjusted contrasts including reporting decade and region; I
+will avoid unnecessary pairwise testing across seasons. I will also
+write a reusable R function for grouped seasonal summaries. Outbreak
+size and the largest 1% of events may be shown as secondary descriptive
+checks, but genuine extreme events will not be removed from the primary
+seasonal analysis.
+
+The dataset may reflect reporting bias, missing outbreak
+characteristics, reporting delays, and changes in surveillance over
+time. The recorded month may not be the month in which exposure
+occurred, and the number of reports is not a population-level incidence
+measure because exposure denominators are unavailable. The analysis will
+therefore remain descriptive or associational and cannot establish that
+water-exposure type causes a particular seasonal pattern.
+
+## References
+
+Reimers, A. K., Knapp, G., & Reimers, C.-D. (2018). *Effects of Exercise
+on the Resting Heart Rate: A Systematic Review and Meta-Analysis of
+Interventional Studies*. Journal of Clinical Medicine, 7(12), 503.
+<https://pmc.ncbi.nlm.nih.gov/articles/PMC6306777/>
+
+NHANES package documentation. *Data from the US National Health and
+Nutrition Examination Study*.
+<https://cran.r-project.org/web/packages/NHANES/refman/NHANES.html>
+
+Centers for Disease Control and Prevention open-data endpoint for the
+waterborne illness records.
+<https://data.cdc.gov/api/v3/views/5xkq-dg7x/query.json>
