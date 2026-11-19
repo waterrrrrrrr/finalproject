@@ -1,11 +1,11 @@
-pandoc: '3.5'
+pandoc: 3.8.3
 pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   instructions: instructions.html
   proposal: proposal.html
   stubs: stubs.html
-last_built: 2026-11-18T03:44Z
+last_built: 2026-11-19T20:48Z
 urls:
   reference: https://waterrrrrrrr.github.io/finalproject/reference
   article: https://waterrrrrrrr.github.io/finalproject/articles

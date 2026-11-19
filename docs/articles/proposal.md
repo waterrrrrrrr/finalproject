@@ -1,177 +1,159 @@
-# Proposal: Physical Activity, Pulse Rate, and Seasonal Waterborne Outbreak Patterns
+# Proposal: Physical Activity, Pulse Rate, and Regional Patterns of Firearm Legislation
 
-Addressed to the **BST260 Teaching Team, Fall 2026**.
+**To: BST260 Teaching Team, Fall 2026**
 
-## Project Overview
+For my final project, I plan to explore two datasets introduced in
+class: NHANES and the RAND State Firearm Law Database. The first study
+focuses on physical activity and pulse rate in young adults, while the
+second examines geographic and temporal differences in firearm
+legislation. I will present the two analyses as separate vignettes on my
+project website.
 
-This project will use two datasets already recommended in the BST260
-project materials. I will combine descriptive statistics, visualization,
-and introductory linear models to study two associations without
-interpreting either as causal. The first study will examine physical
-activity and measured pulse rate in young adults. The second will
-examine seasonal patterns across water-exposure types in reported
-waterborne outbreaks. Both studies will document data provenance,
-missingness, and limitations before any formal analysis is interpreted.
+## Study 1: Physical Activity and Pulse Rate in Young Adults
 
-## Study 1: Physical Activity and Measured Pulse Rate in Young Adults
+### Research question
 
-### Research Question and Motivation
+**How are participation in physical activity and weekly activity
+frequency associated with pulse rate among adults aged 19–40?**
 
-Among adults aged 19–40, how are participation in moderate or vigorous
-physical activity and weekly activity frequency associated with measured
-pulse rate? I expect participants who report physical activity to have
-lower average pulse rates than inactive participants, and I expect more
-activity days among active participants to be associated with lower
-pulse rates. These are prespecified hypotheses rather than preliminary
-findings. A systematic review of interventional studies found that
-exercise, particularly endurance training, can reduce resting heart
-rate, which provides a motivation for examining a related association in
-this educational dataset (Reimers, Knapp, & Reimers, 2018).
+Previous research suggests that regular exercise can lower resting heart
+rate (Reimers et al., 2018). I am interested in whether a similar
+pattern can be observed among young adults in NHANES and whether more
+frequent activity is associated with a lower pulse rate.
 
-### Data Source and Study Population
+### Data and variables
 
-I will use the educational `NHANES` data frame from the [`NHANES` R
-package](https://cran.r-project.org/web/packages/NHANES/refman/NHANES.html).
-It combines the 2009–2010 and 2011–2012 survey cycles and contains a
-resampled version of the original NHANES data. The package documentation
-states that the educational `NHANES` data contain 10,000 rows resampled
-from 20,293 rows of `NHANESraw` to reduce the effects of oversampling,
-and warns that the result is not a research database. The unit of
-analysis will be an individual record for a participant aged 19–40,
-inclusive. Because resampling can produce repeated participant IDs, I
-will report both the number of records and the number of unique IDs,
-inspect the multiplicities, and avoid arbitrary deduplication.
-Inferential results will therefore be presented as educational
-associations with appropriate caution.
+I will use the educational `NHANES` dataset from the R package of the
+same name, based on the 2009–2010 and 2011–2012 surveys conducted by the
+National Center for Health Statistics (NCHS). The package dataset was
+resampled from `NHANESraw` for teaching. The **unit of analysis** is a
+participant record, and the study population is adults aged 19–40,
+inclusive, represented in the dataset.
 
-### Exposure, Outcome, and Covariates
+| Role | Variable | Definition and coding |
+|----|----|----|
+| Exposure | `PhysActive` | Participation in moderate- or vigorous-intensity sports, fitness, or recreational activities (Yes/No). |
+| Exposure | `PhysActiveDays` | Number of active days per week (integer; analyzed among active participants with valid responses). |
+| Outcome | `Pulse` | Pulse rate measured over 60 seconds, in beats per minute (continuous). |
+| Covariates | `Age`, `Sex`, `Race1` | Age in years, sex, and reported racial/ethnic group. |
 
-The primary binary exposure will be `PhysActive`, defined as whether the
-participant reports moderate- or vigorous-intensity sports, fitness, or
-recreational activity. Among participants with a valid active response,
-the secondary exposure will be `PhysActiveDays`, the reported number of
-activity days in a typical week. The outcome will be `Pulse`, documented
-by the package as a 60-second pulse rate. I will call this a measured
-pulse rate rather than assume that it is a strictly standardized resting
-heart rate.
+I will report missing values and use complete records for each analysis.
+Participants reporting no physical activity will remain in the
+participation analysis, but the frequency analysis will include only
+active participants with valid activity-day responses. I will inspect
+activity-day values for inactive participants separately; missing
+responses will not be treated as zero.
 
-The primary adjustment set will be age, `Sex`, and `Race1`, selected
-from subject-matter reasoning before examining associations. I will
-consider `BMI` and `Smoke100` in sensitivity analyses. BMI may partly
-lie on a pathway between activity and pulse, so it will not be treated
-as an automatic primary confounder. `Smoke100` is only reported for
-participants aged 20 years or older, so any analysis using it will use
-an explicitly defined age-restricted sensitivity sample.
+### Planned analysis
 
-### Missing Data and Planned Analysis
+I will compare the distribution of pulse rate between active and
+inactive participants using descriptive statistics and boxplots. Among
+active participants, I will plot pulse rate against weekly activity
+frequency and examine the association using linear regression.
 
-I will describe sample size, mean, median, standard deviation, IQR, and
-missingness for every analysis variable. I will distinguish the
-structural non-applicability of `PhysActiveDays` for participants who do
-not report activity from a missing response among active participants; I
-will not recode all missing activity days to zero. The main frequency
-analysis will be restricted to active participants with valid frequency
-measurements. The primary analysis will use a documented complete-case
-rule and will discuss possible selection bias.
+I plan to adjust for age, sex, and race/ethnicity because these
+characteristics may be associated with both activity habits and pulse
+rate through physiological and social factors. I will also consider
+whether the association differs by sex. An additional model including
+BMI will be used as a sensitivity analysis, since BMI may partly reflect
+the effects of physical activity.
 
-Planned displays include boxplots of measured pulse rate by `PhysActive`
-and a plot of pulse rate against activity days. I will fit an unadjusted
-linear model and a multiple linear model adjusted for age, sex, and
-race, reporting estimated associations and confidence intervals. A
-physical-activity-by-sex interaction will be a secondary analysis rather
-than a data-driven subgroup search. BMI and smoking will be added only
-as sensitivity analyses, and I will check whether the available survey
-cycles support the same variable definitions before combining them.
+Physical activity is self-reported, and the data are cross-sectional, so
+the associations cannot establish causality. In addition, the teaching
+version of NHANES was resampled from the original survey and may contain
+repeated participant IDs. I will check for these and interpret
+statistical uncertainty cautiously.
 
-### Potential Limitations
+## Study 2: Regional and Temporal Patterns of Firearm Legislation in the United States
 
-The data are cross-sectional, activity is self-reported, and the pulse
-measurement may not represent a laboratory-defined resting heart rate.
-Complete-case analysis may select a different population from the target
-age group. The educational resampling scheme and repeated IDs also limit
-ordinary survey inference. Results will be described as associations and
-will not be used to claim that exercise causes a lower pulse rate.
+### Research question
 
-## Study 2: Seasonal Patterns in Waterborne Illness Data
+**How does the proportion of restrictive versus permissive firearm
+legislative changes vary across U.S. regions and over time?**
 
-### Research Question and Motivation
+Rather than counting how many laws each state has changed, I want to
+examine the direction of those changes and whether regional patterns
+have shifted over time.
 
-Among reported waterborne outbreaks with a known water-exposure type,
-how do the four-season distributions differ between drinking-water and
-recreational-water outbreaks, and do these patterns vary across
-reporting decades? Comparing all four seasons preserves information that
-would be lost by reducing the outcome to summer versus non-summer. The
-season will be based on the recorded month: winter will include December
-through February, spring March through May, summer June through August,
-and autumn September through November.
+### Data and variables
 
-### Data Source, Unit, and Exposure
+I will use the `gunleg` dataset included in the course project package,
+derived from RAND’s State Firearm Law Database. The **unit of analysis**
+is a recorded law entry, including implementations, modifications, and
+repeals. The study population consists of entries for the 50 U.S. states
+with effective years 2000–2024; I will exclude 2025 because RAND’s
+current documentation describes coverage only through September 1 of
+that year.
 
-I will use the `waterborne` object included in this package. It was
-retrieved from the CDC open-data endpoint described in the package
-documentation and demonstrated in the BST260 [CDC API
-lecture](https://vjcitn.github.io/2026vjc/slides/prob/20-sep23-cards-cdc.html).
-The original object is a nested list rather than a rectangular data
-frame. The unit of analysis will be one reported outbreak.
+| Role | Variable | Definition and coding |
+|----|----|----|
+| Exposure | `Region` (derived from `State`) | Northeast, Midwest, South, or West; R’s `state.region` label `North Central` will be recoded as Midwest. |
+| Exposure / time | `Effective.Date.Year` | Year the entry took effect; grouped into five-year periods for visualization. |
+| Outcome | `Effect` | RAND-coded restrictive or permissive effect relative to the prior legal regime (binary categorical). |
+| Covariate | `Law.Class` | Category of firearm law (categorical). |
 
-The primary exposure will be a two-level variable created from the
-observed `water_exposure` labels: `Drinking water` versus
-`Recreational water`, with treated and untreated recreational-water
-labels combined. Records with mixed, undetermined, other/environmental,
-or missing exposure labels will not be silently assigned to either
-group. I will report how many records are excluded from the primary
-comparison and retain them in the data audit. A secondary analysis will
-keep treated and untreated recreational-water records separate if their
-sample sizes support a stable comparison. This definition keeps the main
-comparison interpretable while respecting the source data.
+I will match each state to its region and exclude the District of
+Columbia, entries outside 2000–2024, and any records with missing or
+unclassifiable states, years, or effects from the main comparison. I
+will report the number excluded. The supplied data have no missing
+values in these core fields.
 
-### Outcome, Covariates, and Missing Data
+### Planned analysis
 
-The primary outcome will be a four-level season variable derived from
-the recorded `month` field after validating its character-to-integer
-conversion. Calendar decade and geographic region are potential
-covariates because surveillance practices, reporting systems, and the
-distribution of water settings may change over time and across regions.
-I will derive a region from state when a standard state mapping is
-available and document how territories, multistate records, and
-unmatched locations are handled. The number of reported illnesses will
-be retained as a secondary descriptive measure rather than used to
-define the main outcome.
+I will calculate the number and proportion of restrictive and permissive
+entries by region, using the total number of eligible entries in each
+group as the denominator. Stacked bar charts and a heatmap will show
+regional differences and changes across five-year periods. I will write
+a reusable function to summarize these proportions by region and period.
 
-### Planned Analysis and Limitations
+I plan to account for effective year and law class in a simple logistic
+regression because the mix of policy categories and the timing of
+legislative activity may differ across regions. Since a state can
+contribute multiple records, I will also compare state-level proportions
+as a sensitivity analysis and interpret model estimates descriptively
+rather than rely on independent-entry p-values.
 
-I will convert the nested list to a tidy data frame, create the
-four-season variable, and summarize seasonal counts and proportions by
-exposure group. Stacked bar charts and heatmaps will show the seasonal
-distribution, first overall and then by reporting decade. The primary
-comparison will retain all eligible outbreaks with valid month and
-exposure values. If the data support it, I will fit a simple model or
-estimate adjusted contrasts including reporting decade and region; I
-will avoid unnecessary pairwise testing across seasons. I will also
-write a reusable R function for grouped seasonal summaries. Outbreak
-size and the largest 1% of events may be shown as secondary descriptive
-checks, but genuine extreme events will not be removed from the primary
-seasonal analysis.
-
-The dataset may reflect reporting bias, missing outbreak
-characteristics, reporting delays, and changes in surveillance over
-time. The recorded month may not be the month in which exposure
-occurred, and the number of reports is not a population-level incidence
-measure because exposure denominators are unavailable. The analysis will
-therefore remain descriptive or associational and cannot establish that
-water-exposure type causes a particular seasonal pattern.
+These results will describe the direction of entries in RAND’s selected
+law classes, not all legislative activity or the overall strictness of
+current laws. The study will not estimate the effect of legislation on
+firearm mortality. A comparison with mortality data could be a later
+extension if recommended by the teaching team.
 
 ## References
 
-Reimers, A. K., Knapp, G., & Reimers, C.-D. (2018). *Effects of Exercise
-on the Resting Heart Rate: A Systematic Review and Meta-Analysis of
-Interventional Studies*. Journal of Clinical Medicine, 7(12), 503.
-<https://pmc.ncbi.nlm.nih.gov/articles/PMC6306777/>
+- National Center for Health Statistics. [National Health and Nutrition
+  Examination Survey
+  (NHANES)](https://www.cdc.gov/nchs/nhanes/index.html).
+- [NHANES R package
+  documentation](https://cran.r-project.org/web/packages/NHANES/refman/NHANES.html).
+- Reimers, A. K., Knapp, G., & Reimers, C. D. (2018). Effects of
+  exercise on the resting heart rate: A systematic review and
+  meta-analysis of interventional studies. *Journal of Clinical
+  Medicine, 7*(12), 503. <https://doi.org/10.3390/jcm7120503>
+- Hoch, E., Nabel, A., Fauerbach, G. W., Morral, A. R., Schell, T. L., &
+  Smucker, S. (2026). [Development of the RAND State Firearm Law
+  Database and Supporting
+  Materials](https://www.rand.org/pubs/tools/TLA243-2-v4.html). RAND
+  Corporation.
 
-NHANES package documentation. *Data from the US National Health and
-Nutrition Examination Study*.
-<https://cran.r-project.org/web/packages/NHANES/refman/NHANES.html>
+## AI Use Disclosure
 
-Centers for Disease Control and Prevention open-data endpoint for the
-waterborne illness records.
-<https://data.cdc.gov/api/v3/views/5xkq-dg7x/query.json>
+- Model: OpenAI ChatGPT (GPT-6).
+- Scope of use: I selected the two research topics based on my personal
+  interests and made the final decisions about the research questions
+  and project scope. I consulted ChatGPT to discuss the feasibility of
+  potential topics, clarify dataset characteristics, and organize my
+  research ideas into a structured proposal. I also used it to improve
+  grammar, readability, and Quarto formatting.
+- Prompts:
+
+1.  “Explain the available datasets, their structures, and potential
+    research questions.”
+2.  “I am interested in the relationship between physical activity and
+    resting heart rate in young adults. Is this a feasible research
+    topic?”
+3.  “How can I study regional differences in firearm legislative changes
+    using regional grouping, heatmaps, and chi-square tests?”
+4.  “Help me refine the wording, improve clarity and grammar, and adjust
+    the Markdown formatting of the proposal for my two selected research
+    topics, following the course instructions.”
